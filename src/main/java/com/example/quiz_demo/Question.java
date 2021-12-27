@@ -12,13 +12,10 @@ public class Question {
     public Question(int questionId, String questionText) {
         this.questionId = questionId;
         this.questionText = questionText;
-        this.answers = getAnswers();
+        this.answers = null;
     }
 
-    public ArrayList<Answer> getAnswers(){
-        DBConnection connection = new DBConnection();
-        return connection.getAnswersDB();
-    }
+
 
     public int getQuestionId() {
         return questionId;
@@ -34,6 +31,10 @@ public class Question {
 
     public void setQuestionText(String questionText) {
         this.questionText = questionText;
+    }
+
+    public void setAnswers(ArrayList<Answer> answers) {
+        this.answers = answers;
     }
 
     @Override

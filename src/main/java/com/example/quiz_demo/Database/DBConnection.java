@@ -23,7 +23,7 @@ public class DBConnection {
             e.printStackTrace();
         }
     }
-
+    //All questions from DB
     public ArrayList<Question> getQuestionDB() {
         ArrayList<Question> questionList = new ArrayList<>();
         String query = "SELECT * FROM questions";
@@ -33,7 +33,7 @@ public class DBConnection {
             Statement statement = con.createStatement();
             ResultSet rs = statement.executeQuery(query);
 
-            while (rs.next()){
+            while (rs.next()) {
                 questionList.add(new Question(rs.getInt("question_id"),
                         (rs.getString("question_text"))
                 ));
@@ -47,7 +47,34 @@ public class DBConnection {
         }
         return questionList;
     }
+//Only Answers for questionid x
+    public ArrayList<Answer> answerListForQuestion(int questionID){
 
+    ArrayList<Answer> listOfAnswerPerQuestion = new ArrayList<>();
+    String query = "SELECT * FROM answers WHERE question_id=" + questionID;
+
+      try{
+          Connection con = DriverManager.getConnection(DBData.getURL(), DBData.getUSER(), DBData.getPASSWORD());
+          Statement statement = con.createStatement();
+          ResultSet rs = statement.executeQuery(query);
+
+          while (rs.next()) {
+              listOfAnswerPerQuestion.add(new Answer(rs.getInt("answer_id"),
+                      (rs.getInt("question_id")),
+                      (rs.getString("answer_text")),
+                      (rs.getBoolean("answer_correct"))
+              ));
+          }
+      }catch (SQLException ex){
+
+          System.out.println(ex.getMessage());
+          System.out.println("Connection NOT OK");
+          ex.printStackTrace();
+      }
+    return listOfAnswerPerQuestion;
+    }
+
+//All Answers from DB
     public ArrayList<Answer> getAnswersDB() {
         ArrayList<Answer> answerList = new ArrayList<>();
         String query = "SELECT * FROM answers";

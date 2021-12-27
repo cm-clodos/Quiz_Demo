@@ -22,14 +22,8 @@ public class Main extends Application {
     public static void main(String[] args) {
         launch();
 
-        DBConnection connection = new DBConnection();
-
-         ArrayList<Question> questions = connection.getQuestionDB();
-        for (Question question: questions){
-           System.out.println(question);
 
 
-        }
 
 
         }
