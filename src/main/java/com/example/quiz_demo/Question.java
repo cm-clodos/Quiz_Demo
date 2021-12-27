@@ -37,6 +37,10 @@ public class Question {
         this.answers = answers;
     }
 
+    public ArrayList<Answer> getAnswers() {
+        return answers;
+    }
+
     @Override
     public String toString() {
         return "Question{" +

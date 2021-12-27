@@ -16,7 +16,7 @@ public class MainController {
     public void SceneSwitchtoQuiz(){
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("Quiz-view.fxml"));
-            Scene scene = new Scene(fxmlLoader.load(), 600, 400);
+            Scene scene = new Scene(fxmlLoader.load(), 800, 600);
             Stage stage = new Stage();
             stage.setTitle("Quiz Demo!");
             stage.setScene(scene);
