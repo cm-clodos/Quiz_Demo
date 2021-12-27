@@ -1,14 +1,78 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.example.quiz_demo.QuizController"
-            prefHeight="400.0" prefWidth="600.0">
-
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.quiz_demo.QuizController">
+   <children>
+      <GridPane hgap="10.0" layoutX="146.0" layoutY="187.0" prefHeight="160.0" prefWidth="324.0" vgap="10.0">
+        <columnConstraints>
+          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="150.60003662109375" minWidth="10.0" prefWidth="146.60003662109375" />
+          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="177.0" minWidth="10.0" prefWidth="143.39996337890625" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Label fx:id="answer1" onMouseClicked="#choice" text="answer1">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label fx:id="answer2" onMouseClicked="#choice" text="answer2" GridPane.columnIndex="1">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label fx:id="answer3" onMouseClicked="#choice" text="answer3" GridPane.rowIndex="1">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label fx:id="answer4" onMouseClicked="#choice" text="answer4" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+         </children>
+      </GridPane>
+      <VBox alignment="CENTER" layoutX="195.0" layoutY="8.0" prefHeight="200.0" prefWidth="187.0">
+         <children>
+            <Label fx:id="labelQuestionCount" alignment="CENTER" text="Frage 1">
+               <font>
+                  <Font size="14.0" />
+               </font>
+               <VBox.margin>
+                  <Insets bottom="70.0" />
+               </VBox.margin>
+            </Label>
+            <Label fx:id="labelShowQuestion" text="Frage von DB">
+               <font>
+                  <Font size="18.0" />
+               </font>
+               <VBox.margin>
+                  <Insets bottom="50.0" />
+               </VBox.margin>
+            </Label>
+         </children>
+      </VBox>
+      <HBox alignment="CENTER" layoutX="193.0" layoutY="333.0" prefHeight="66.0" prefWidth="214.0">
+         <children>
+            <Button fx:id="btnCheck" mnemonicParsing="false" onAction="#CheckAnswers" text="Check">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Button>
+         </children>
+      </HBox>
+   </children>
 </AnchorPane>
