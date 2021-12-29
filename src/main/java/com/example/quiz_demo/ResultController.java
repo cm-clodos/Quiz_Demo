@@ -35,7 +35,7 @@ public class ResultController implements Initializable {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("Start-view.fxml"));
             Scene scene = new Scene(fxmlLoader.load(), 600, 400);
-            Stage stage = new Stage();
+            Stage stage = (Stage) btnBack.getScene().getWindow();
             stage.setTitle("Quiz Demo!");
             stage.setScene(scene);
             stage.show();

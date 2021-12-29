@@ -164,9 +164,7 @@ public class QuizController implements Initializable {
             choiceA4 = false;
             correctAnswer4 = false;
 
-
         }
-
 
     }
 
@@ -218,7 +216,7 @@ public class QuizController implements Initializable {
             //show results if no more questions
 
             if (actualQuestion >= questionList.size()) {
-                showResultsScene();
+                showResultsScene(actionEvent);
 
             } else {
                 // show next question
@@ -240,11 +238,11 @@ public class QuizController implements Initializable {
         }
     }
 
-    public void showResultsScene() {
+    public void showResultsScene(ActionEvent actionEvent) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("Result-view.fxml"));
             Scene scene = new Scene(fxmlLoader.load(), 800, 600);
-            Stage stage = new Stage();
+            Stage stage = (Stage) btnCheck.getScene().getWindow();
             stage.setTitle("Quiz Demo!");
             stage.setScene(scene);
             stage.show();

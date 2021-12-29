@@ -1,5 +1,6 @@
 package com.example.quiz_demo;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -13,11 +14,11 @@ public class MainController {
     private Button btnStart;
 
     @FXML
-    public void SceneSwitchtoQuiz(){
+    public void SceneSwitchtoQuiz(ActionEvent event){
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("Quiz-view.fxml"));
             Scene scene = new Scene(fxmlLoader.load(), 800, 600);
-            Stage stage = new Stage();
+            Stage stage = (Stage) btnStart.getScene().getWindow();
             stage.setTitle("Quiz Demo!");
             stage.setScene(scene);
             stage.show();
