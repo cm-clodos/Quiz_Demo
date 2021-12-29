@@ -56,6 +56,7 @@ public class QuizController implements Initializable {
     private Button btnCheck;
 
     private int actualQuestion = 0;
+    private int points = 0;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -143,7 +144,7 @@ public class QuizController implements Initializable {
     @FXML
     public void CheckAnswers(ActionEvent actionEvent) {
         int questionCheckerCount = 0;
-        int points =0;
+
         if (actionEvent.getSource() == btnCheck && !btnCheckPressed) {
             // Check if answer true = answer in DB True
 
@@ -165,32 +166,45 @@ public class QuizController implements Initializable {
             btnCheck.setText("Next!");
         } else if (actionEvent.getSource() == btnCheck && btnCheckPressed) {
             // show next question
-            Question question = questionList.get(actualQuestion);
-            labelShowQuestion.setText(question.getQuestionText());
-            labelQuestionCount.setText("Question" + question.getQuestionId() + "/" + questionList.size());
 
-            answerList = question.getAnswers();
-            for (int i = 0; i < answerList.size(); i++) {
-                answerLabels.get(i).setText(answerList.get(i).getAnswerText());
+            if (actualQuestion >= questionList.size()) {
+                showResultsScene();
+
+            } else {
+                Question question = questionList.get(actualQuestion);
+                labelShowQuestion.setText(question.getQuestionText());
+                labelQuestionCount.setText("Question" + question.getQuestionId() + "/" + questionList.size());
+
+                answerList = question.getAnswers();
+                for (int i = 0; i < answerList.size(); i++) {
+                    answerLabels.get(i).setText(answerList.get(i).getAnswerText());
+                }
+                actualQuestion++;
+
+                btnCheckPressed = false;
+                btnCheck.setText("Check!");
+
+
             }
-
-            btnCheckPressed = false;
-            btnCheck.setText("Check!");
-
-
         }
     }
 
-    public void displayQuestion() {
-
+    public void showResultsScene(){
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("Result-view.fxml"));
+            Scene scene = new Scene(fxmlLoader.load(), 800, 600);
+            Stage stage = new Stage();
+            stage.setTitle("Quiz Demo!");
+            stage.setScene(scene);
+            stage.show();
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
 
     }
 
 
-    public void displayAnswers() {
 
-
-    }
 
     public void getAnswerPackage(ArrayList<Question> questionList) {
 
