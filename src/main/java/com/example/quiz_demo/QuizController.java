@@ -39,27 +39,36 @@ public class QuizController implements Initializable {
     @FXML
     private Text textIsCorrect;
 
-    boolean choiceA1 = false;
-    boolean choiceA2 = false;
-    boolean choiceA3 = false;
-    boolean choiceA4 = false;
-    boolean btnCheckPressed = false;
+    private boolean choiceA1 = false;
+    private boolean choiceA2 = false;
+    private boolean choiceA3 = false;
+    private boolean choiceA4 = false;
+    private boolean btnCheckPressed = false;
+
+    private boolean correctAnswer1 = false;
+    private boolean correctAnswer2 = false;
+    private boolean correctAnswer3 = false;
+    private boolean correctAnswer4 = false;
+
 
     private ArrayList<Answer> answerList = new ArrayList<>();
     @FXML
     private ArrayList<Question> questionList = new ArrayList<>();
     @FXML
     private ArrayList<Label> answerLabels = new ArrayList<>();
-    @FXML
-    private ArrayList<Boolean> choices = new ArrayList<>();
+
+
     @FXML
     private Button btnCheck;
 
     private int actualQuestion = 0;
-    private int points = 0;
+    protected static int points = 0;
+    protected static int maxPoints = 0;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        resetPoints();
+        resetMaxPoints();
 
         DBConnection connection = new DBConnection();
         questionList = connection.getQuestionDB();
@@ -76,17 +85,14 @@ public class QuizController implements Initializable {
         answerLabels.add(answer4);
 
 
-
-
         labelShowQuestion.setText(question.getQuestionText());
         labelQuestionCount.setText("Question" + question.getQuestionId() + "/" + questionList.size());
 
         answerList = question.getAnswers();
 
-        answer1.setText(answerList.get(0).getAnswerText());
-        answer2.setText(answerList.get(1).getAnswerText());
-        answer3.setText(answerList.get(2).getAnswerText());
-        answer4.setText(answerList.get(3).getAnswerText());
+        for (int i = 0; i < answerList.size(); i++) {
+            answerLabels.get(i).setText(answerList.get(i).getAnswerText());
+        }
 
         System.out.println(question);
 
@@ -99,41 +105,65 @@ public class QuizController implements Initializable {
         if (event.getSource() == answer1 && !choiceA1) {
             answer1.setStyle("-fx-background-color: steelblue;-fx-text-fill:white;");
             choiceA1 = true;
+            if (answerList.get(0).isCorrect() && choiceA1) {
+                correctAnswer1 = true;
+
+            }
+
 
         } else if (event.getSource() == answer1 && choiceA1) {
             answer1.setStyle(null);
             choiceA1 = false;
+            correctAnswer1 = false;
+
 
         }
         //Antwort 2
         else if (event.getSource() == answer2 && !choiceA2) {
             answer2.setStyle("-fx-background-color: steelblue;-fx-text-fill:white;");
             choiceA2 = true;
+            if (answerList.get(1).isCorrect() && choiceA2) {
+                correctAnswer2 = true;
+            }
+
 
         } else if (event.getSource() == answer2 && choiceA2) {
             answer2.setStyle(null);
             choiceA2 = false;
+            correctAnswer2 = false;
+
 
         }
         //Antwort 3
         else if (event.getSource() == answer3 && !choiceA3) {
             answer3.setStyle("-fx-background-color: steelblue;-fx-text-fill:white;");
             choiceA3 = true;
+            if (answerList.get(2).isCorrect() && choiceA3) {
+                correctAnswer3 = true;
+            }
 
 
         } else if (event.getSource() == answer3 && choiceA3) {
             answer3.setStyle(null);
             choiceA3 = false;
+            correctAnswer3 = false;
+
 
         }
         //Antwort 4
         else if (event.getSource() == answer4 && !choiceA4) {
             answer4.setStyle("-fx-background-color: steelblue;-fx-text-fill:white;");
             choiceA4 = true;
+            if (answerList.get(3).isCorrect() && choiceA4) {
+                correctAnswer4 = true;
+            }
+
 
         } else if (event.getSource() == answer4 && choiceA4) {
             answer4.setStyle(null);
             choiceA4 = false;
+            correctAnswer4 = false;
+
 
         }
 
@@ -143,34 +173,55 @@ public class QuizController implements Initializable {
 
     @FXML
     public void CheckAnswers(ActionEvent actionEvent) {
-        int questionCheckerCount = 0;
+
 
         if (actionEvent.getSource() == btnCheck && !btnCheckPressed) {
             // Check if answer true = answer in DB True
 
-            /*for (int i = 0; i < answerList.size(); i++) {
-
-                Answer answer = answerList.get(i);
-                System.out.println(answer.isCorrect());
-                System.out.println(choices.get(0));
-                if (answer.isCorrect() && choices.get(i) ) {
-                    points++;
-                }else {
-                    textIsCorrect.setText("Answer is false ");
-                }
+            if (correctAnswer1) {
+                points+=1;
+                System.out.println("Answer1 = " + points);
             }
-            System.out.println(points);*/
+            if (correctAnswer2) {
+                points+=1;
+                System.out.println("Answer2 = " + points);
+            }
+            if (correctAnswer3) {
+                points+=1;
+                System.out.println("Answer3 = " + points);
+            }
+            if (correctAnswer4) {
+                points+=1;
+                System.out.println("Answer4 = " + points);
+            } else {
+                //textIsCorrect.setText("Answer is false ");
+            }
+            System.out.println("Total points for this question = " + points);
 
 
             btnCheckPressed = true;
             btnCheck.setText("Next!");
+
+            maxPointsPerQuestion();
+            markTheResultAnswerLabels();
+
         } else if (actionEvent.getSource() == btnCheck && btnCheckPressed) {
-            // show next question
+            //delete old answerslabels
+            refreshOldAnswerLabels();
+
+            //delete old answersMarker
+            refreshOldAnswerMarkers();
+
+            //reset correct answers
+            resetCorrectAnswers();
+
+            //show results if no more questions
 
             if (actualQuestion >= questionList.size()) {
                 showResultsScene();
 
             } else {
+                // show next question
                 Question question = questionList.get(actualQuestion);
                 labelShowQuestion.setText(question.getQuestionText());
                 labelQuestionCount.setText("Question" + question.getQuestionId() + "/" + questionList.size());
@@ -189,7 +240,7 @@ public class QuizController implements Initializable {
         }
     }
 
-    public void showResultsScene(){
+    public void showResultsScene() {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("Result-view.fxml"));
             Scene scene = new Scene(fxmlLoader.load(), 800, 600);
@@ -197,13 +248,11 @@ public class QuizController implements Initializable {
             stage.setTitle("Quiz Demo!");
             stage.setScene(scene);
             stage.show();
-        }catch (Exception ex){
+        } catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
 
     }
-
-
 
 
     public void getAnswerPackage(ArrayList<Question> questionList) {
@@ -216,6 +265,58 @@ public class QuizController implements Initializable {
             question.setAnswers(answers);
             questionId++;
 
+        }
+
+
+    }
+
+    public void refreshOldAnswerLabels() {
+
+        for (int i = 0; i < answerList.size(); i++) {
+            answerLabels.get(i).setText("");
+        }
+    }
+
+    public void refreshOldAnswerMarkers() {
+
+        for (int i = 0; i < answerLabels.size(); i++) {
+            answerLabels.get(i).setStyle(null);
+        }
+    }
+
+    public void maxPointsPerQuestion() {
+        for (int i = 0; i < answerList.size(); i++) {
+            if (answerList.get(i).isCorrect()) {
+                maxPoints++;
+            }
+        }
+
+
+    }
+    public void resetPoints(){
+        if (points!=0){
+            points =0;
+        }
+    }
+    public void resetMaxPoints(){
+        if (maxPoints!=0){
+            maxPoints=0;
+        }
+    }
+    public void resetCorrectAnswers(){
+        correctAnswer1= false;
+        correctAnswer2= false;
+        correctAnswer3= false;
+        correctAnswer4= false;
+    }
+
+    public void markTheResultAnswerLabels(){
+        for (int i = 0; i < answerList.size(); i++) {
+            if (answerList.get(i).isCorrect()){
+                answerLabels.get(i).setStyle("-fx-background-color: green;-fx-text-fill:white;");
+            }else {
+                answerLabels.get(i).setStyle("-fx-background-color: red;-fx-text-fill:white;");
+            }
         }
 
 
