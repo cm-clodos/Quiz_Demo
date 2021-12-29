@@ -73,7 +73,7 @@ public class QuizController implements Initializable {
 
         DBConnection connection = new DBConnection();
         questionList = connection.getQuestionDB();
-        getAnswerPackage(questionList);
+
 
         questionList.forEach(System.out::println);
 
@@ -234,20 +234,10 @@ public class QuizController implements Initializable {
     }
 
 
-    public void getAnswerPackage(ArrayList<Question> questionList) {
-
-        int questionId = 1;
-        DBConnection dbConnection = new DBConnection();
-
-        for (Question question : questionList) {
-            ArrayList<Answer> answers = dbConnection.answerListForQuestion(questionId);
-            question.setAnswers(answers);
-            questionId++;
-
-        }
 
 
-    }
+
+
 
     public void refreshOldAnswerLabels() {
 
@@ -297,8 +287,6 @@ public class QuizController implements Initializable {
                 answerLabels.get(i).setStyle("-fx-background-color: red;-fx-text-fill:white;");
             }
         }
-
-
 
 
     }

@@ -34,9 +34,10 @@ public class DBConnection {
             ResultSet rs = statement.executeQuery(query);
 
             while (rs.next()) {
+                ArrayList<Answer> answers = answerListForQuestion(rs.getInt("question_id"));
+
                 questionList.add(new Question(rs.getInt("question_id"),
-                        (rs.getString("question_text"))
-                ));
+                        rs.getString("question_text"), answers));
 
             }
 

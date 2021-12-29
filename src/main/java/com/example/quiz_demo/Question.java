@@ -14,6 +14,11 @@ public class Question {
         this.questionText = questionText;
         this.answers = null;
     }
+    public Question(int questionId, String questionText, ArrayList<Answer>answers) {
+        this.questionId = questionId;
+        this.questionText = questionText;
+        this.answers = answers;
+    }
 
 
 
