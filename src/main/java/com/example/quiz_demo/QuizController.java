@@ -18,6 +18,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
@@ -75,26 +76,14 @@ public class QuizController implements Initializable {
         getAnswerPackage(questionList);
 
         questionList.forEach(System.out::println);
-        Question question = questionList.get(actualQuestion);
-        actualQuestion++;
-
 
         answerLabels.add(answer1);
         answerLabels.add(answer2);
         answerLabels.add(answer3);
         answerLabels.add(answer4);
 
+        showNextQuestion();
 
-        labelShowQuestion.setText(question.getQuestionText());
-        labelQuestionCount.setText("Question" + question.getQuestionId() + "/" + questionList.size());
-
-        answerList = question.getAnswers();
-
-        for (int i = 0; i < answerList.size(); i++) {
-            answerLabels.get(i).setText(answerList.get(i).getAnswerText());
-        }
-
-        System.out.println(question);
 
 
     }
@@ -220,15 +209,7 @@ public class QuizController implements Initializable {
 
             } else {
                 // show next question
-                Question question = questionList.get(actualQuestion);
-                labelShowQuestion.setText(question.getQuestionText());
-                labelQuestionCount.setText("Question" + question.getQuestionId() + "/" + questionList.size());
-
-                answerList = question.getAnswers();
-                for (int i = 0; i < answerList.size(); i++) {
-                    answerLabels.get(i).setText(answerList.get(i).getAnswerText());
-                }
-                actualQuestion++;
+               showNextQuestion();
 
                 btnCheckPressed = false;
                 btnCheck.setText("Check!");
@@ -317,6 +298,20 @@ public class QuizController implements Initializable {
             }
         }
 
+
+
+
+    }
+    public void showNextQuestion(){
+        Question question = questionList.get(actualQuestion);
+        labelShowQuestion.setText(question.getQuestionText());
+        labelQuestionCount.setText("Question" + question.getQuestionId() + "/" + questionList.size());
+
+        answerList = question.getAnswers();
+        for (int i = 0; i < answerList.size(); i++) {
+            answerLabels.get(i).setText(answerList.get(i).getAnswerText());
+        }
+        actualQuestion++;
 
     }
 }

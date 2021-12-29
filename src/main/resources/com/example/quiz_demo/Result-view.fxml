@@ -40,7 +40,7 @@
             </Label>
             <Button fx:id="btnBack" mnemonicParsing="false" onAction="#backToStart" text="Back">
                <font>
-                  <Font size="14.0" />
+                  <Font size="18.0" />
                </font>
             </Button>
          </children>
