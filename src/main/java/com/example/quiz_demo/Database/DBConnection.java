@@ -28,10 +28,9 @@ public class DBConnection {
         ArrayList<Question> questionList = new ArrayList<>();
         String query = "SELECT * FROM questions";
 
-        try {
-            Connection con = DriverManager.getConnection(DBData.getURL(), DBData.getUSER(), DBData.getPASSWORD());
-            Statement statement = con.createStatement();
-            ResultSet rs = statement.executeQuery(query);
+        try (Connection con = DriverManager.getConnection(DBData.getURL(), DBData.getUSER(), DBData.getPASSWORD());
+        Statement statement = con.createStatement();
+        ResultSet rs = statement.executeQuery(query)){
 
             while (rs.next()) {
                 ArrayList<Answer> answers = answerListForQuestion(rs.getInt("question_id"));
@@ -54,10 +53,10 @@ public class DBConnection {
     ArrayList<Answer> listOfAnswerPerQuestion = new ArrayList<>();
     String query = "SELECT * FROM answers WHERE question_id=" + questionID;
 
-      try{
-          Connection con = DriverManager.getConnection(DBData.getURL(), DBData.getUSER(), DBData.getPASSWORD());
-          Statement statement = con.createStatement();
-          ResultSet rs = statement.executeQuery(query);
+      try (Connection con = DriverManager.getConnection(DBData.getURL(), DBData.getUSER(), DBData.getPASSWORD());
+           Statement statement = con.createStatement();
+           ResultSet rs = statement.executeQuery(query)){
+
 
           while (rs.next()) {
               listOfAnswerPerQuestion.add(new Answer(rs.getInt("answer_id"),
@@ -80,10 +79,10 @@ public class DBConnection {
         ArrayList<Answer> answerList = new ArrayList<>();
         String query = "SELECT * FROM answers";
 
-        try {
-            Connection con = DriverManager.getConnection(DBData.getURL(), DBData.getUSER(), DBData.getPASSWORD());
-            Statement statement = con.createStatement();
-            ResultSet rs = statement.executeQuery(query);
+        try (Connection con = DriverManager.getConnection(DBData.getURL(), DBData.getUSER(), DBData.getPASSWORD());
+             Statement statement = con.createStatement();
+             ResultSet rs = statement.executeQuery(query)){
+
 
             while (rs.next()){
                 answerList.add(new Answer(rs.getInt("answer_id"),
