@@ -229,13 +229,10 @@ public class QuizController implements Initializable {
             stage.show();
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
+            ex.printStackTrace();
         }
 
     }
-
-
-
-
 
 
 

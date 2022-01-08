@@ -7,8 +7,8 @@ import java.util.ArrayList;
 
 public class DBConnection {
 
-    public DBConnection() {
-        DBData conData = new DBData();
+    public DBConnection() {}
+       /* DBData conData = new DBData();
         try (
                 Connection con = DriverManager.getConnection(
                         DBData.getURL(),
@@ -22,7 +22,7 @@ public class DBConnection {
             System.out.println("Connection NOT OK");
             e.printStackTrace();
         }
-    }
+    }*/
     //All questions from DB
     public ArrayList<Question> getQuestionDB() {
         ArrayList<Question> questionList = new ArrayList<>();
