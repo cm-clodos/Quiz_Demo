@@ -7,8 +7,14 @@ public class Answer {
     private boolean isCorrect;
 
 
-    public Answer(int answerId, int questionId, String answerText, boolean isCorrect) {
+    public Answer(int answerId,  String answerText, boolean isCorrect, int questionId) {
         this.answerId = answerId;
+        this.questionId = questionId;
+        this.answerText = answerText;
+        this.isCorrect = isCorrect;
+    }
+
+    public Answer(String answerText, boolean isCorrect, int questionId) {
         this.questionId = questionId;
         this.answerText = answerText;
         this.isCorrect = isCorrect;

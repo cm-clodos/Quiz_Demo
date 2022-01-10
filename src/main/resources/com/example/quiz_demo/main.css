@@ -1,0 +1,58 @@
+
+#mainTitle{
+    -fx-font-size: 3em;
+    -fx-font-family: "Arial";
+}
+
+.mainButton{
+    -fx-background-color: #111;
+    -fx-text-fill: #ececec;
+}
+
+.stage{
+    -fx-background-color: #171616;
+}
+
+/* SubSites */
+#subTitleTtB{
+    -fx-font-size: 2em;
+    -fx-font-family: "Arial";
+    -fx-fill: #efefef;
+}
+
+.subTitle{
+    -fx-font-size: 1.2em;
+    -fx-font-family: "Arial";
+    -fx-font-weight: bold;
+    -fx-fill: #e1e1e1;
+}
+
+/* Question Edit */
+.editListQuestionContainer{
+    -fx-background-color: #262626;
+    -fx-background-radius: 4px;
+    -fx-border-radius: 4px;
+    -fx-border-color: #2c2c2c;
+    -fx-border-style: solid;
+    -fx-border-width: 1px;
+}
+
+.editListQuestionContainer:hover {
+    -fx-background-color: #3d3d3d;
+    -fx-border-color: #464646;
+}
+
+.editListQuestionContainer .editListQuestionText {
+    -fx-fill: #eee;
+}
+
+.label {
+    -fx-text-fill: #ececec;
+    -fx-fill: #ececec;
+}
+
+.check-box{
+    -fx-text-fill: #ececec;
+    -fx-fill: #ececec;
+    -fx-padding: 10px 5px;
+}

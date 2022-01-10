@@ -20,7 +20,8 @@ public class Question {
         this.answers = answers;
     }
 
-
+    public Question() {
+    }
 
     public int getQuestionId() {
         return questionId;
@@ -54,4 +55,6 @@ public class Question {
                 ", answers=" + answers +
                 '}';
     }
+
+
 }
