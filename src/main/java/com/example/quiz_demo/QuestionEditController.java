@@ -49,27 +49,8 @@ public class QuestionEditController implements Initializable {
     public void saveQuestionEditClick(ActionEvent actionEvent) {
         //TODO: handle DB Save Event
 
-        //insert datatoDB if id == empty
-        int questionId = Integer.parseInt(id.getText());
-        String question = questionText.getText();
-
-
-        //updateQuestionFromDb(questionId, question);
-        //editAnswerFromDb(questionId);
         addNewQestionInDb();
 
-
-/*
-        for (int i = 0; i < answerText.size(); i++) {
-            answers.add(answerText.get(i).getText());
-        }*/
-
-
-        //  Question addDBQuestion = new Question(questionId, question,createNewAnswerObjects(questionId));
-
-
-        //else update question id =  id.getText in int umwandeln
-        //Update where id = question id
 
         // Back to List of Questions Edit screen
         switchToEditQuestionsClick(actionEvent);
@@ -161,7 +142,7 @@ public class QuestionEditController implements Initializable {
         String answer2 = answerText2.getText();
         String answer3 = answerText3.getText();
 
-        ArrayList<Answer> addAnswers = createNewAnswerObjects(newCreatetQuestionId);
+
         ArrayList<Answer> updateAnswers = createNewAnswerObjects(oldQuestionId);
         //Question addDBQuestion = new Question(questionId, question,createNewAnswerObjects(questionId));
 
@@ -179,7 +160,7 @@ public class QuestionEditController implements Initializable {
 
 
                 if (aId0 == 0 && !answer0.isEmpty()) {
-                    // erstelle neue Antwort
+                    // erstelle neue Antwort mit bestehender questionId
                     System.out.println("eingelesene Id = " + aId0);
                     DBConnection con = new DBConnection();
                     con.addOneAnswerInDB(updateAnswers.get(0));
@@ -310,17 +291,12 @@ public class QuestionEditController implements Initializable {
         String answer2 = answerText2.getText();
         String answer3 = answerText3.getText();
 
+// array von Answers mit answerObjekten, die questionId enthält von neu erstellter Question
         ArrayList<Answer> addAnswers = createNewAnswerObjects(newCreatetQuestionId);
 
-        //Question addDBQuestion = new Question(questionId, question,createNewAnswerObjects(questionId));
-
-
-        //Wenn answer id 0 und Text ist leer gar nichts machen
 
         //wenn answer id 0 und Text hat länge = neue antwort in Db hinzufügen (insert mit question id und answerText)
         //Wenn verifytrue ist, dann kontrollier ob Antworten id = 0 und Text vorhanden --> Create new Answer Insert in DB
-
-        //////---> Bug es werden nur antworten in Db gespeichert wenn alle ids = 0 und alle antworttext inhalt haben
 
         if (verifyIfMinTwoAnswers()) {
 
@@ -488,10 +464,7 @@ public class QuestionEditController implements Initializable {
             aId3 = Integer.parseInt(answerId3.getText());
         }
 
-       /* int aId0 = Integer.parseInt(answerId0.getText());
-        int aId1 = Integer.parseInt(answerId1.getText());
-        int aId2 = Integer.parseInt(answerId2.getText());
-        int aId3 = Integer.parseInt(answerId3.getText());*/
+
 
         String answerObjText0 = answerText0.getText();
         String answerObjText1 = answerText1.getText();
@@ -546,8 +519,10 @@ public class QuestionEditController implements Initializable {
         }
     }
 
-    public void fillAnswerTextAndAnswerIdsInArray() {
+    public void fillAnswerTextAndAnswerIdsCheckboxesInArray() {
         //AnswerText in ArrayList abgefüllt
+        //AnswerId's in ArrayList abgefüllt
+        //Checkboxes in ArrayList abgefüllt
         answerText.add(answerText0);
         answerText.add(answerText1);
         answerText.add(answerText2);
@@ -568,7 +543,7 @@ public class QuestionEditController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         System.out.println("Question edit Init called");
-        fillAnswerTextAndAnswerIdsInArray();
+        fillAnswerTextAndAnswerIdsCheckboxesInArray();
 
         /*ArrayList<Answer> answers = new ArrayList<Answer>();
         answers.add(new Answer(2,"Antwort A",false, 0));
