@@ -80,6 +80,25 @@ public void addOneAnswerInDB(Answer answer){
 
 
     }
+
+    public void updateAnswers(int questionId, String answerText, boolean isCorrect){
+    String query = "UPDATE answers SET answerText='" + answerText + "', " + isCorrect + " WHERE question_id=" + questionId;
+
+        try (Connection con = DriverManager.getConnection(DBData.getURL(), DBData.getUSER(), DBData.getPASSWORD());
+             Statement statement = con.createStatement();
+             ResultSet rs = statement.executeQuery(query)) {
+
+            while (rs.next()) {
+
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+            System.out.println("Connection NOT OK");
+            ex.printStackTrace();
+
+        }
+
+    }
     public int insertNewQuestion(String questionText) {
         String query = "INSERT INTO questions (question_text) VALUE ('" + questionText + "') RETURNING question_id;";
         //String query2 = "SELECT LAST_INSERT_ID();";
@@ -103,6 +122,23 @@ public void addOneAnswerInDB(Answer answer){
 
         }
         return lastCreatetQuestionId;
+    }
+    public void UpdateQuestion(int questionId, String questionText) {
+        String query = "UPDATE questions SET question_text='" + questionText + "' WHERE question_id=" + questionId;
+
+        try (Connection con = DriverManager.getConnection(DBData.getURL(), DBData.getUSER(), DBData.getPASSWORD());
+             Statement statement = con.createStatement();
+             ResultSet rs = statement.executeQuery(query)) {
+
+            while (rs.next()) {
+
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+            System.out.println("Connection NOT OK");
+            ex.printStackTrace();
+
+        }
     }
 
 
