@@ -100,12 +100,13 @@ public class QuestionEditController implements Initializable {
             }
 
         } else if (questionId > 0 && !question.isEmpty()) {
+            //Question wird geupdatet und Answers werden geupdatet gelöscht oder neue hinzugefügt
             updateQuestionFromDb(questionId, question);
-            addNewAnswer(questionId, createtQuestionID);
-            addAnswerFromCreatetQuestion(questionId);
+            editNewAnswer(questionId, createtQuestionID);
             System.out.println("QuestionId > 0 = Question Update in DB");
 
         } else if (questionId > 0 && question.isEmpty()) {
+            //Question und dazugehörige answers werden gelöscht
             DBConnection con = new DBConnection();
             con.deleteQuestionbAndAnswersInDb(questionId);
             System.out.println("QuestionId > 0 und text ist leer = Question löschen in DB");
@@ -129,7 +130,10 @@ public class QuestionEditController implements Initializable {
 
 
 
-    public boolean addNewAnswer(int oldQuestionId, int newCreatetQuestionId) {
+    public boolean editNewAnswer(int oldQuestionId, int newCreatetQuestionId) {
+        // erstellt neue Answers zu den bereits erstellten Questions
+        //ändert bestehende Answers
+        //löscht bestehende Answers, wenn kein Text vorhanden ist.
         int aId0 = 0;
         int aId1 = 0;
         int aId2 = 0;
@@ -178,8 +182,8 @@ public class QuestionEditController implements Initializable {
                     // erstelle neue Antwort
                     System.out.println("eingelesene Id = " + aId0);
                     DBConnection con = new DBConnection();
-                    con.addOneAnswerInDB(addAnswers.get(0));
-                    System.out.println(addAnswers.get(0));
+                    con.addOneAnswerInDB(updateAnswers.get(0));
+                    System.out.println(updateAnswers.get(0));
 
                 }
                 if (aId0 > 0 && !answer0.isEmpty()) {
@@ -201,8 +205,8 @@ public class QuestionEditController implements Initializable {
                     // erstelle neue Antwort
                     System.out.println("eingelesene Id = " + aId1);
                     DBConnection con = new DBConnection();
-                    con.addOneAnswerInDB(addAnswers.get(1));
-                    System.out.println(addAnswers.get(1));
+                    con.addOneAnswerInDB(updateAnswers.get(1));
+                    System.out.println(updateAnswers.get(1));
 
                 }
                 if (aId1 > 0 && !answer1.isEmpty()) {
@@ -222,8 +226,8 @@ public class QuestionEditController implements Initializable {
                     // erstelle neue Antwort
                     System.out.println("eingelesene Id = " + aId2);
                     DBConnection con = new DBConnection();
-                    con.addOneAnswerInDB(addAnswers.get(2));
-                    System.out.println(addAnswers.get(2));
+                    con.addOneAnswerInDB(updateAnswers.get(2));
+                    System.out.println(updateAnswers.get(2));
 
                 }
                 if (aId2 > 0 && !answer2.isEmpty()) {
@@ -243,8 +247,8 @@ public class QuestionEditController implements Initializable {
                     // erstelle neue Antwort
                     System.out.println("eingelesene Id = " + aId3);
                     DBConnection con = new DBConnection();
-                    con.addOneAnswerInDB(addAnswers.get(3));
-                    System.out.println(addAnswers.get(3));
+                    con.addOneAnswerInDB(updateAnswers.get(3));
+                    System.out.println(updateAnswers.get(3));
                 }
                 if (aId3 > 0 && !answer3.isEmpty()) {
                     //Update Antwort
@@ -277,7 +281,8 @@ public class QuestionEditController implements Initializable {
     }
 
     public boolean addAnswerFromCreatetQuestion(int newCreatetQuestionId){
-        // Macht answers für neu erstellte Fragen
+        // Macht answers für neu erstellte Fragen mit neu erstellter questionid
+        //Diese Methode wird nur ausgeführt wenn neue question erstellt wird.
         int aId0 = 0;
         int aId1 = 0;
         int aId2 = 0;
