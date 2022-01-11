@@ -81,8 +81,9 @@ public void addOneAnswerInDB(Answer answer){
 
     }
 
-    public void updateAnswers(int questionId, String answerText, boolean isCorrect){
-    String query = "UPDATE answers SET answerText='" + answerText + "', " + isCorrect + " WHERE question_id=" + questionId;
+    public void updateAnswers(int questionId, String answerText, boolean isCorrect, int answerId){
+    String query = "UPDATE answers SET answer_text='" + answerText + "', answer_correct=" + isCorrect + "" +
+            " WHERE question_id=" + questionId + " AND answer_id=" + answerId;
 
         try (Connection con = DriverManager.getConnection(DBData.getURL(), DBData.getUSER(), DBData.getPASSWORD());
              Statement statement = con.createStatement();
@@ -97,6 +98,26 @@ public void addOneAnswerInDB(Answer answer){
             ex.printStackTrace();
 
         }
+
+    }
+
+    public void deleteAnswerInDb(int questionId, int answerId){
+    String query = "DELETE FROM answers WHERE answer_id=" + answerId +
+            " AND question_id=" + questionId;
+
+        try (Connection con = DriverManager.getConnection(DBData.getURL(), DBData.getUSER(), DBData.getPASSWORD());
+             Statement statement = con.createStatement();
+             ResultSet rs = statement.executeQuery(query);
+        ){
+
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+            System.out.println("Connection NOT OK");
+            ex.printStackTrace();
+
+        }
+
 
     }
     public int insertNewQuestion(String questionText) {
@@ -133,6 +154,26 @@ public void addOneAnswerInDB(Answer answer){
             while (rs.next()) {
 
             }
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+            System.out.println("Connection NOT OK");
+            ex.printStackTrace();
+
+        }
+    }
+
+    public void deleteQuestionbAndAnswersInDb(int questionId){
+    String query = "DELETE FROM questions WHERE question_id =" + questionId;
+    String query2 = "DELETE FROM answers WHERE question_id=" + questionId;
+
+
+        try (Connection con = DriverManager.getConnection(DBData.getURL(), DBData.getUSER(), DBData.getPASSWORD());
+             Statement statement = con.createStatement();
+             Statement statement2 = con.createStatement();
+
+             ResultSet rs = statement.executeQuery(query2)) {
+            ResultSet rs2 = statement2.executeQuery(query);
+
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
             System.out.println("Connection NOT OK");

@@ -39,6 +39,8 @@ public class QuestionEditController implements Initializable {
 
     private ArrayList<TextField> answerIds = new ArrayList<>();
 
+    private ArrayList<CheckBox> checkBoxes = new ArrayList<>();
+
     public void cancelQuestionEditClick(ActionEvent actionEvent) {
         // Back to List of Questions Edit screen
         switchToEditQuestionsClick(actionEvent);
@@ -52,17 +54,15 @@ public class QuestionEditController implements Initializable {
         String question = questionText.getText();
 
 
-        updateQuestionFromDb(questionId, question);
-        editAnswerFromDb(questionId);
-       // addNewQestionInDb();
+        //updateQuestionFromDb(questionId, question);
+        //editAnswerFromDb(questionId);
+        addNewQestionInDb();
 
 
 /*
         for (int i = 0; i < answerText.size(); i++) {
             answers.add(answerText.get(i).getText());
         }*/
-
-
 
 
         //  Question addDBQuestion = new Question(questionId, question,createNewAnswerObjects(questionId));
@@ -92,140 +92,50 @@ public class QuestionEditController implements Initializable {
             /////----> Bug zuerst feststellen ob frage erstellt werden konnte
             //wenn Frage erstellt mit neuer Frage Id, die Antworten erstellen
 
-            boolean answersInDB = addNewAnswer(createtQuestionID);
+            boolean answersInDB = addAnswerFromCreatetQuestion(createtQuestionID);
 
-            if (!answersInDB){
+            if (!answersInDB) {
                 //lösche die neu erstellte Frage zu den fehlgeschlagenen Antworten
-                deleteQuestionInDB(createtQuestionID);
+               //deleteQuestionInDB(createtQuestionID);
             }
 
-        } else if (questionId > 0 && !question.isEmpty()){
+        } else if (questionId > 0 && !question.isEmpty()) {
             updateQuestionFromDb(questionId, question);
+            addNewAnswer(questionId, createtQuestionID);
+            addAnswerFromCreatetQuestion(questionId);
             System.out.println("QuestionId > 0 = Question Update in DB");
 
-        } else if (questionId > 0 && question.isEmpty()){
-            deleteQuestionInDB(questionId);
+        } else if (questionId > 0 && question.isEmpty()) {
+            DBConnection con = new DBConnection();
+            con.deleteQuestionbAndAnswersInDb(questionId);
             System.out.println("QuestionId > 0 und text ist leer = Question löschen in DB");
         }
 
 
     }
 
-    public void updateQuestionFromDb(int questionId, String questionText){
+    public void updateQuestionFromDb(int questionId, String questionText) {
 
         // Wenn question id > 0 und Text hat länge = bestehende question updaten ( update mit where questionId = questionId )
 
-        if (questionId > 0 && !questionText.isEmpty()){
+        if (questionId > 0 && !questionText.isEmpty()) {
             DBConnection con = new DBConnection();
             con.UpdateQuestion(questionId, questionText);
             System.out.println("bestehende Question wird Updatet");
-        }else {
+        } else {
             System.out.println("QuestionId ist = 0 addNewQuestionInDb() wird ausgeführt");
         }
     }
-    public void deleteQuestionInDB(int questionId){
-        //TODO lösche question und dazugehörige Antworten
 
-    }
 
-    public boolean addNewAnswer(int questionId) {
+
+    public boolean addNewAnswer(int oldQuestionId, int newCreatetQuestionId) {
         int aId0 = 0;
         int aId1 = 0;
         int aId2 = 0;
         int aId3 = 0;
 
         boolean answersCreatet = false;
-
-  //Check wenn AnswerId Feld nicht leer ist, dann lese aus und parse in Integer.
-        if (!answerId0.getText().isEmpty()) {
-             aId0 = Integer.parseInt(answerId0.getText());
-        }
-        if (!answerId1.getText().isEmpty()) {
-            aId1 = Integer.parseInt(answerId1.getText());
-        }
-        if (!answerId2.getText().isEmpty()) {
-             aId2 = Integer.parseInt(answerId2.getText());
-        }
-        if (!answerId3.getText().isEmpty()) {
-            aId3 = Integer.parseInt(answerId3.getText());
-        }
-
-
-        String answers0 = answerText0.getText();
-        String answers1 = answerText1.getText();
-        String answer2 = answerText2.getText();
-        String answer3 = answerText3.getText();
-
-        ArrayList<Answer> answers = createNewAnswerObjects(questionId);
-        //Question addDBQuestion = new Question(questionId, question,createNewAnswerObjects(questionId));
-
-
-        //Wenn answer id 0 und Text ist leer gar nichts machen
-
-        //wenn answer id 0 und Text hat länge = neue antwort in Db hinzufügen (insert mit question id und answerText)
-        //Wenn verifytrue ist, dann kontrollier ob Antworten id = 0 und Text vorhanden --> Create new Answer Insert in DB
-
-        //////---> Bug es werden nur antworten in Db gespeichert wenn alle ids = 0 und alle antworttext inhalt haben
-
-        if (verifyIfMinTwoAnswers()) {
-
-            if (verifyMinOneAnswerIsTrue()) {
-
-
-                if (aId0 == 0 && !answers0.isEmpty()) {
-                    System.out.println("eingelesene Id = " + aId0);
-                    DBConnection con = new DBConnection();
-                    con.addOneAnswerInDB(answers.get(0));
-                    System.out.println(answers.get(0));
-
-                }
-                if (aId1 == 0 && !answers1.isEmpty()) {
-                    System.out.println("eingelesene Id = " + aId1);
-                    DBConnection con = new DBConnection();
-                    con.addOneAnswerInDB(answers.get(1));
-                    System.out.println(answers.get(1));
-
-                }
-                if (aId2 == 0 && !answer2.isEmpty()) {
-                    System.out.println("eingelesene Id = " + aId2);
-                    DBConnection con = new DBConnection();
-                    con.addOneAnswerInDB(answers.get(2));
-                    System.out.println(answers.get(2));
-
-                }
-                if (aId3 == 0 && !answer3.isEmpty()) {
-                    System.out.println("eingelesene Id = " + aId3);
-                    DBConnection con = new DBConnection();
-                    con.addOneAnswerInDB(answers.get(3));
-                    System.out.println(answers.get(3));
-                }
-
-                    answersCreatet = true;
-            }else {
-                System.out.println("Mindestens eine Antwort muss als korrekt markiert sein");
-                answersCreatet = false;
-
-
-            }
-        }else {
-            System.out.println("Mindestens 2 Antworten müssen eingetragen werden!");
-            answersCreatet = false;
-
-        }
-
-       return answersCreatet;
-    }
-
-    public void editAnswerFromDb(int questionId) {
-        //TODO Wenn answer id > 0 und Text hat länge = bestehende antwort updaten ( update mit where answerId = answerid )
-
-        //String queryAnswer = "UPDATE tbl_answers SET answer_text='" + question +  " WHERE answer_id=" +  ;
-
-        int aId0 = 0;
-        int aId1 = 0;
-        int aId2 = 0;
-        int aId3 = 0;
-
 
         //Check wenn AnswerId Feld nicht leer ist, dann lese aus und parse in Integer.
         if (!answerId0.getText().isEmpty()) {
@@ -241,62 +151,238 @@ public class QuestionEditController implements Initializable {
             aId3 = Integer.parseInt(answerId3.getText());
         }
 
+
         String answer0 = answerText0.getText();
         String answer1 = answerText1.getText();
         String answer2 = answerText2.getText();
         String answer3 = answerText3.getText();
 
-        ArrayList<Answer> answers = createNewAnswerObjects(questionId);
+        ArrayList<Answer> addAnswers = createNewAnswerObjects(newCreatetQuestionId);
+        ArrayList<Answer> updateAnswers = createNewAnswerObjects(oldQuestionId);
+        //Question addDBQuestion = new Question(questionId, question,createNewAnswerObjects(questionId));
+
+
+        //Wenn answer id 0 und Text ist leer gar nichts machen
+
+        //wenn answer id 0 und Text hat länge = neue antwort in Db hinzufügen (insert mit question id und answerText)
+        //Wenn verifytrue ist, dann kontrollier ob Antworten id = 0 und Text vorhanden --> Create new Answer Insert in DB
+
+        //////---> Bug es werden nur antworten in Db gespeichert wenn alle ids = 0 und alle antworttext inhalt haben
 
         if (verifyIfMinTwoAnswers()) {
 
             if (verifyMinOneAnswerIsTrue()) {
-                if (aId0 > 0 && !answer0.isEmpty()) {
+
+
+                if (aId0 == 0 && !answer0.isEmpty()) {
+                    // erstelle neue Antwort
                     System.out.println("eingelesene Id = " + aId0);
                     DBConnection con = new DBConnection();
-                    con.updateAnswers(answers.get(0).getQuestionId(), answers.get(0).getAnswerText(), answers.get(0).isCorrect());
-                    System.out.println(answers.get(0));
+                    con.addOneAnswerInDB(addAnswers.get(0));
+                    System.out.println(addAnswers.get(0));
 
                 }
-                if (aId1 > 0 && !answer1.isEmpty()){
+                if (aId0 > 0 && !answer0.isEmpty()) {
+                    //Update Antwort
+                    System.out.println("eingelesene Id = " + aId0);
+                    DBConnection con = new DBConnection();
+                    con.updateAnswers(updateAnswers.get(0).getQuestionId(), updateAnswers.get(0).getAnswerText(), updateAnswers.get(0).isCorrect(), updateAnswers.get(0).getAnswerId());
+                    System.out.println(updateAnswers.get(0));
+
+                }
+                if (aId0 > 0 && answer0.isEmpty()) {
+                    //lösche Antwort
+                    DBConnection con = new DBConnection();
+                    con.deleteAnswerInDb(updateAnswers.get(0).getQuestionId(),updateAnswers.get(0).getAnswerId());
+
+                }
+
+                if (aId1 == 0 && !answer1.isEmpty()) {
+                    // erstelle neue Antwort
                     System.out.println("eingelesene Id = " + aId1);
                     DBConnection con = new DBConnection();
-                    con.updateAnswers(answers.get(1).getQuestionId(), answers.get(1).getAnswerText(), answers.get(1).isCorrect());
-                    System.out.println(answers.get(1));
-
+                    con.addOneAnswerInDB(addAnswers.get(1));
+                    System.out.println(addAnswers.get(1));
 
                 }
-                if (aId2 > 0 && !answer2.isEmpty()){
+                if (aId1 > 0 && !answer1.isEmpty()) {
+                    //Update Antwort
+                    System.out.println("eingelesene Id = " + aId1);
+                    DBConnection con = new DBConnection();
+                    con.updateAnswers(updateAnswers.get(1).getQuestionId(), updateAnswers.get(1).getAnswerText(), updateAnswers.get(1).isCorrect(), updateAnswers.get(1).getAnswerId());
+                    System.out.println(updateAnswers.get(1));
+                }
+                if (aId1 > 0 && answer1.isEmpty()) {
+                    //lösche Antwort
+                    DBConnection con = new DBConnection();
+                    con.deleteAnswerInDb(updateAnswers.get(1).getQuestionId(), updateAnswers.get(1).getAnswerId());
+                }
+
+                if (aId2 == 0 && !answer2.isEmpty()) {
+                    // erstelle neue Antwort
                     System.out.println("eingelesene Id = " + aId2);
                     DBConnection con = new DBConnection();
-                    con.updateAnswers(answers.get(2).getQuestionId(), answers.get(2).getAnswerText(), answers.get(2).isCorrect());
-                    System.out.println(answers.get(2));
-
+                    con.addOneAnswerInDB(addAnswers.get(2));
+                    System.out.println(addAnswers.get(2));
 
                 }
-                if (aId3 > 0 && !answer3.isEmpty()){
+                if (aId2 > 0 && !answer2.isEmpty()) {
+                    //Update Antwort
+                    System.out.println("eingelesene Id = " + aId2);
+                    DBConnection con = new DBConnection();
+                    con.updateAnswers(updateAnswers.get(2).getQuestionId(), updateAnswers.get(2).getAnswerText(), updateAnswers.get(2).isCorrect(), updateAnswers.get(2).getAnswerId());
+                    System.out.println(updateAnswers.get(2));
+                }
+                if (aId2 > 0 && answer2.isEmpty()){
+                    //lösche Antwort
+                    DBConnection con = new DBConnection();
+                    con.deleteAnswerInDb(updateAnswers.get(2).getQuestionId(), updateAnswers.get(2).getAnswerId());
+                }
+
+                if (aId3 == 0 && !answer3.isEmpty()) {
+                    // erstelle neue Antwort
                     System.out.println("eingelesene Id = " + aId3);
                     DBConnection con = new DBConnection();
-                    con.updateAnswers(answers.get(3).getQuestionId(), answers.get(3).getAnswerText(), answers.get(3).isCorrect());
-                    System.out.println(answers.get(3));
+                    con.addOneAnswerInDB(addAnswers.get(3));
+                    System.out.println(addAnswers.get(3));
+                }
+                if (aId3 > 0 && !answer3.isEmpty()) {
+                    //Update Antwort
+                    System.out.println("eingelesene Id = " + aId3);
+                    DBConnection con = new DBConnection();
+                    con.updateAnswers(updateAnswers.get(3).getQuestionId(), updateAnswers.get(3).getAnswerText(), updateAnswers.get(3).isCorrect(), updateAnswers.get(3).getAnswerId());
+                    System.out.println(updateAnswers.get(3));
 
+                }
+                if (aId3 > 0 && answer3.isEmpty()){
+                    //lösche Antwort
+                    DBConnection con = new DBConnection();
+                    con.deleteAnswerInDb(updateAnswers.get(3).getQuestionId(), updateAnswers.get(3).getAnswerId());
+                }
+
+                answersCreatet = true;
+            } else {
+                System.out.println("Mindestens eine Antwort muss als korrekt markiert sein");
+                answersCreatet = false;
+
+
+            }
+        } else {
+            System.out.println("Mindestens 2 Antworten müssen eingetragen werden!");
+            answersCreatet = false;
+
+        }
+
+        return answersCreatet;
+    }
+
+    public boolean addAnswerFromCreatetQuestion(int newCreatetQuestionId){
+        // Macht answers für neu erstellte Fragen
+        int aId0 = 0;
+        int aId1 = 0;
+        int aId2 = 0;
+        int aId3 = 0;
+
+        boolean answersCreatet = false;
+
+        //Check wenn AnswerId Feld nicht leer ist, dann lese aus und parse in Integer.
+        if (!answerId0.getText().isEmpty()) {
+            aId0 = Integer.parseInt(answerId0.getText());
+        }
+        if (!answerId1.getText().isEmpty()) {
+            aId1 = Integer.parseInt(answerId1.getText());
+        }
+        if (!answerId2.getText().isEmpty()) {
+            aId2 = Integer.parseInt(answerId2.getText());
+        }
+        if (!answerId3.getText().isEmpty()) {
+            aId3 = Integer.parseInt(answerId3.getText());
+        }
+
+
+        String answer0 = answerText0.getText();
+        String answer1 = answerText1.getText();
+        String answer2 = answerText2.getText();
+        String answer3 = answerText3.getText();
+
+        ArrayList<Answer> addAnswers = createNewAnswerObjects(newCreatetQuestionId);
+
+        //Question addDBQuestion = new Question(questionId, question,createNewAnswerObjects(questionId));
+
+
+        //Wenn answer id 0 und Text ist leer gar nichts machen
+
+        //wenn answer id 0 und Text hat länge = neue antwort in Db hinzufügen (insert mit question id und answerText)
+        //Wenn verifytrue ist, dann kontrollier ob Antworten id = 0 und Text vorhanden --> Create new Answer Insert in DB
+
+        //////---> Bug es werden nur antworten in Db gespeichert wenn alle ids = 0 und alle antworttext inhalt haben
+
+        if (verifyIfMinTwoAnswers()) {
+
+            if (verifyMinOneAnswerIsTrue()) {
+
+
+                if (aId0 == 0 && !answer0.isEmpty()) {
+                    // erstelle neue Antwort
+                    System.out.println("eingelesene Id = " + aId0);
+                    DBConnection con = new DBConnection();
+                    con.addOneAnswerInDB(addAnswers.get(0));
+                    System.out.println(addAnswers.get(0));
 
                 }
 
-            }else {
-                System.out.println("Mindestens eine Antwort muss als korrekt markiert sein");
-            }
 
-        }else {
+
+                if (aId1 == 0 && !answer1.isEmpty()) {
+                    // erstelle neue Antwort
+                    System.out.println("eingelesene Id = " + aId1);
+                    DBConnection con = new DBConnection();
+                    con.addOneAnswerInDB(addAnswers.get(1));
+                    System.out.println(addAnswers.get(1));
+
+                }
+
+
+                if (aId2 == 0 && !answer2.isEmpty()) {
+                    // erstelle neue Antwort
+                    System.out.println("eingelesene Id = " + aId2);
+                    DBConnection con = new DBConnection();
+                    con.addOneAnswerInDB(addAnswers.get(2));
+                    System.out.println(addAnswers.get(2));
+
+                }
+
+
+                if (aId3 == 0 && !answer3.isEmpty()) {
+                    // erstelle neue Antwort
+                    System.out.println("eingelesene Id = " + aId3);
+                    DBConnection con = new DBConnection();
+                    con.addOneAnswerInDB(addAnswers.get(3));
+                    System.out.println(addAnswers.get(3));
+                }
+
+
+                answersCreatet = true;
+            } else {
+                System.out.println("Mindestens eine Antwort muss als korrekt markiert sein");
+                answersCreatet = false;
+
+
+            }
+        } else {
             System.out.println("Mindestens 2 Antworten müssen eingetragen werden!");
+            answersCreatet = false;
+
         }
 
+        return answersCreatet;
     }
-    public void deleteAnswerFromDb(){
-        //TODO wenn answer id > 0 und text ist leer = Delete answer where answerid = answerid
 
-    }
-// Verifiziert ob mindestens eine Antwort als korrekt markiert wurde
+
+
+
+
+    // Verifiziert ob mindestens eine Antwort als korrekt markiert wurde
     public boolean verifyMinOneAnswerIsTrue() {
         boolean verify = false;
         boolean correctAnswer0 = answerCorrect0.isSelected();
@@ -322,8 +408,9 @@ public class QuestionEditController implements Initializable {
         return verify;
 
     }
-//Verifiziert ob mindestens 2 Antworten ausgefüllt wurden (Alle mögliche Kombinationen getestet)
-    public boolean verifyIfMinTwoAnswers(){
+
+    //Verifiziert ob mindestens 2 Antworten ausgefüllt wurden (Alle mögliche Kombinationen getestet)
+    public boolean verifyIfMinTwoAnswers() {
         boolean verify = false;
         String answer0 = answerText0.getText();
         String answer1 = answerText1.getText();
@@ -337,35 +424,30 @@ public class QuestionEditController implements Initializable {
         String stringAnswerId3 = answerId3.getText();
 
         if ((!answer0.isEmpty() && !stringAnswerId0.isEmpty()) &&
-                (!answer1.isEmpty() && !stringAnswerId1.isEmpty())){
+                (!answer1.isEmpty() && !stringAnswerId1.isEmpty())) {
             verify = true;
             System.out.println(verify);
-        }
-        else if ((!answer1.isEmpty() && !stringAnswerId1.isEmpty()) &&
-                (!answer2.isEmpty() && !stringAnswerId2.isEmpty())){
+        } else if ((!answer1.isEmpty() && !stringAnswerId1.isEmpty()) &&
+                (!answer2.isEmpty() && !stringAnswerId2.isEmpty())) {
             verify = true;
             System.out.println(verify);
-        }
-        else if ((!answer2.isEmpty() && !stringAnswerId2.isEmpty()) &&
-                (!answer3.isEmpty() && !stringAnswerId3.isEmpty())){
+        } else if ((!answer2.isEmpty() && !stringAnswerId2.isEmpty()) &&
+                (!answer3.isEmpty() && !stringAnswerId3.isEmpty())) {
             verify = true;
             System.out.println(verify);
-        }
-        else if ((!answer3.isEmpty() && !stringAnswerId3.isEmpty()) &&
-                (!answer0.isEmpty() && !stringAnswerId0.isEmpty())){
+        } else if ((!answer3.isEmpty() && !stringAnswerId3.isEmpty()) &&
+                (!answer0.isEmpty() && !stringAnswerId0.isEmpty())) {
             verify = true;
             System.out.println(verify);
-        }
-        else if ((!answer0.isEmpty() && !stringAnswerId0.isEmpty()) &&
-                (!answer2.isEmpty() && !stringAnswerId2.isEmpty())){
+        } else if ((!answer0.isEmpty() && !stringAnswerId0.isEmpty()) &&
+                (!answer2.isEmpty() && !stringAnswerId2.isEmpty())) {
             verify = true;
             System.out.println(verify);
-        }
-        else if ((!answer3.isEmpty() && !stringAnswerId3.isEmpty()) &&
-                (!answer1.isEmpty() && !stringAnswerId1.isEmpty())){
+        } else if ((!answer3.isEmpty() && !stringAnswerId3.isEmpty()) &&
+                (!answer1.isEmpty() && !stringAnswerId1.isEmpty())) {
             verify = true;
             System.out.println(verify);
-        }else {
+        } else {
             verify = false;
             System.out.println(verify);
         }
@@ -379,6 +461,27 @@ public class QuestionEditController implements Initializable {
 
         //erzeugt neue Answerobjekte befüllt sie mit answerId, text, isCorrect, question id von zugehöriger Frage
         //Füllt alle Answerojekte in eine Answer ArrayList
+
+        int aId0 = 0;
+        int aId1 = 0;
+        int aId2 = 0;
+        int aId3 = 0;
+
+        boolean answersCreatet = false;
+
+        //Check wenn AnswerId Feld nicht leer ist, dann lese aus und parse in Integer.
+        if (!answerId0.getText().isEmpty()) {
+            aId0 = Integer.parseInt(answerId0.getText());
+        }
+        if (!answerId1.getText().isEmpty()) {
+            aId1 = Integer.parseInt(answerId1.getText());
+        }
+        if (!answerId2.getText().isEmpty()) {
+            aId2 = Integer.parseInt(answerId2.getText());
+        }
+        if (!answerId3.getText().isEmpty()) {
+            aId3 = Integer.parseInt(answerId3.getText());
+        }
 
        /* int aId0 = Integer.parseInt(answerId0.getText());
         int aId1 = Integer.parseInt(answerId1.getText());
@@ -396,10 +499,10 @@ public class QuestionEditController implements Initializable {
         boolean correctAnswer3 = answerCorrect3.isSelected();
 
 
-        Answer addDBAnswer0 = new Answer(answerObjText0, correctAnswer0, questionID);
-        Answer addDBAnswer1 = new Answer(answerObjText1, correctAnswer1, questionID);
-        Answer addDBAnswer2 = new Answer(answerObjText2, correctAnswer2, questionID);
-        Answer addDBAnswer3 = new Answer(answerObjText3, correctAnswer3, questionID);
+        Answer addDBAnswer0 = new Answer(aId0, answerObjText0, correctAnswer0, questionID);
+        Answer addDBAnswer1 = new Answer(aId1, answerObjText1, correctAnswer1, questionID);
+        Answer addDBAnswer2 = new Answer(aId2, answerObjText2, correctAnswer2, questionID);
+        Answer addDBAnswer3 = new Answer(aId3, answerObjText3, correctAnswer3, questionID);
 
         ArrayList<Answer> answerAddList = new ArrayList<>();
         answerAddList.add(addDBAnswer0);
@@ -434,6 +537,7 @@ public class QuestionEditController implements Initializable {
         for (int i = 0; i < answers.size(); i++) {
             answerText.get(i).setText(answers.get(i).getAnswerText());
             answerIds.get(i).setText(String.valueOf(answers.get(i).getAnswerId()));
+            checkBoxes.get(i).setSelected(answers.get(i).isCorrect());
         }
     }
 
@@ -448,6 +552,11 @@ public class QuestionEditController implements Initializable {
         answerIds.add(answerId1);
         answerIds.add(answerId2);
         answerIds.add(answerId3);
+
+        checkBoxes.add(answerCorrect0);
+        checkBoxes.add(answerCorrect1);
+        checkBoxes.add(answerCorrect2);
+        checkBoxes.add(answerCorrect3);
 
     }
 
@@ -466,7 +575,7 @@ public class QuestionEditController implements Initializable {
         initWithData(tmpQ);*/
 
         DBConnection con = new DBConnection();
-        initWithData(con.getQuestionWithIdFromDB(2));
+        initWithData(con.getQuestionWithIdFromDB(29));
 
     }
 
