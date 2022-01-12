@@ -61,7 +61,7 @@ public class QuestionEditController implements Initializable {
 //Wenn question id = 0 und text hat länge = insert  question text (wenn erzeugt brauche id von Question für Answers)
         int createtQuestionID = 0;
         int questionId = Integer.parseInt(id.getText());
-        String question = questionText.getText();
+        String question = questionText.getText().trim();
 
         if (questionId == 0 && !question.isEmpty()) {
             // insert in question table --> question_text
@@ -89,8 +89,8 @@ public class QuestionEditController implements Initializable {
         } else if (questionId > 0 && question.isEmpty()) {
             //Question und dazugehörige answers werden gelöscht
             DBConnection con = new DBConnection();
-            con.deleteQuestionbAndAnswersInDb(questionId);
-            System.out.println("QuestionId > 0 und text ist leer = Question löschen in DB");
+            con.deleteQuestionAndAnswersInDb(questionId);
+            System.out.println("QuestionId > 0 und text ist leer = Question löschen und dazugehörige Answer werden gelöscht in DB");
         }
 
 
@@ -123,24 +123,24 @@ public class QuestionEditController implements Initializable {
         boolean answersCreatet = false;
 
         //Check wenn AnswerId Feld nicht leer ist, dann lese aus und parse in Integer.
-        if (!answerId0.getText().isEmpty()) {
+        if (!answerId0.getText().trim().isEmpty()) {
             aId0 = Integer.parseInt(answerId0.getText());
         }
-        if (!answerId1.getText().isEmpty()) {
+        if (!answerId1.getText().trim().isEmpty()) {
             aId1 = Integer.parseInt(answerId1.getText());
         }
-        if (!answerId2.getText().isEmpty()) {
+        if (!answerId2.getText().trim().isEmpty()) {
             aId2 = Integer.parseInt(answerId2.getText());
         }
-        if (!answerId3.getText().isEmpty()) {
+        if (!answerId3.getText().trim().isEmpty()) {
             aId3 = Integer.parseInt(answerId3.getText());
         }
 
-
-        String answer0 = answerText0.getText();
-        String answer1 = answerText1.getText();
-        String answer2 = answerText2.getText();
-        String answer3 = answerText3.getText();
+        //.trim() verhindert das Leerschläge als Inhalt erkannt werden
+        String answer0 = answerText0.getText().trim();
+        String answer1 = answerText1.getText().trim();
+        String answer2 = answerText2.getText().trim();
+        String answer3 = answerText3.getText().trim();
 
 
         ArrayList<Answer> updateAnswers = createNewAnswerObjects(oldQuestionId);
@@ -151,8 +151,6 @@ public class QuestionEditController implements Initializable {
 
         //wenn answer id 0 und Text hat länge = neue antwort in Db hinzufügen (insert mit question id und answerText)
         //Wenn verifytrue ist, dann kontrollier ob Antworten id = 0 und Text vorhanden --> Create new Answer Insert in DB
-
-        //////---> Bug es werden nur antworten in Db gespeichert wenn alle ids = 0 und alle antworttext inhalt haben
 
         if (verifyIfMinTwoAnswers()) {
 
@@ -272,24 +270,24 @@ public class QuestionEditController implements Initializable {
         boolean answersCreatet = false;
 
         //Check wenn AnswerId Feld nicht leer ist, dann lese aus und parse in Integer.
-        if (!answerId0.getText().isEmpty()) {
+        if (!answerId0.getText().trim().isEmpty()) {
             aId0 = Integer.parseInt(answerId0.getText());
         }
-        if (!answerId1.getText().isEmpty()) {
+        if (!answerId1.getText().trim().isEmpty()) {
             aId1 = Integer.parseInt(answerId1.getText());
         }
-        if (!answerId2.getText().isEmpty()) {
+        if (!answerId2.getText().trim().isEmpty()) {
             aId2 = Integer.parseInt(answerId2.getText());
         }
-        if (!answerId3.getText().isEmpty()) {
+        if (!answerId3.getText().trim().isEmpty()) {
             aId3 = Integer.parseInt(answerId3.getText());
         }
 
 
-        String answer0 = answerText0.getText();
-        String answer1 = answerText1.getText();
-        String answer2 = answerText2.getText();
-        String answer3 = answerText3.getText();
+        String answer0 = answerText0.getText().trim();
+        String answer1 = answerText1.getText().trim();
+        String answer2 = answerText2.getText().trim();
+        String answer3 = answerText3.getText().trim();
 
 // array von Answers mit answerObjekten, die questionId enthält von neu erstellter Question
         ArrayList<Answer> addAnswers = createNewAnswerObjects(newCreatetQuestionId);
@@ -374,17 +372,10 @@ public class QuestionEditController implements Initializable {
         if (!correctAnswer0 && !correctAnswer1 && !correctAnswer2 && !correctAnswer3) {
             verify = false;
             System.out.println("Alle Antworten sind not_correct");
-            System.out.println(correctAnswer0);
-            System.out.println(correctAnswer1);
-            System.out.println(correctAnswer2);
-            System.out.println(correctAnswer3);
+
         } else {
             verify = true;
             System.out.println("Mindestens eine Antwort is_correct");
-            System.out.println(correctAnswer0);
-            System.out.println(correctAnswer1);
-            System.out.println(correctAnswer2);
-            System.out.println(correctAnswer3);
         }
         return verify;
 
@@ -393,41 +384,49 @@ public class QuestionEditController implements Initializable {
     //Verifiziert ob mindestens 2 Antworten ausgefüllt wurden (Alle mögliche Kombinationen getestet)
     public boolean verifyIfMinTwoAnswers() {
         boolean verify = false;
-        String answer0 = answerText0.getText();
-        String answer1 = answerText1.getText();
-        String answer2 = answerText2.getText();
-        String answer3 = answerText3.getText();
+        String answer0 = answerText0.getText().trim();
+        String answer1 = answerText1.getText().trim();
+        String answer2 = answerText2.getText().trim();
+        String answer3 = answerText3.getText().trim();
 
         //String genommen, weil keine lust zu Interger parsen
-        String stringAnswerId0 = answerId0.getText();
-        String stringAnswerId1 = answerId1.getText();
-        String stringAnswerId2 = answerId2.getText();
-        String stringAnswerId3 = answerId3.getText();
+        String stringAnswerId0 = answerId0.getText().trim();
+        String stringAnswerId1 = answerId1.getText().trim();
+        String stringAnswerId2 = answerId2.getText().trim();
+        String stringAnswerId3 = answerId3.getText().trim();
 
+        //überprüfung ob AnswerText und eine AnswerId vorhanden ist, von immer 2 Answers in der Maske
+        //Id nicht unbeidngt nötig, wenn sichergestellt, dass immer eine ID eingefüllt ist und kein Leerschlag.
         if ((!answer0.isEmpty() && !stringAnswerId0.isEmpty()) &&
                 (!answer1.isEmpty() && !stringAnswerId1.isEmpty())) {
             verify = true;
             System.out.println(verify);
+
         } else if ((!answer1.isEmpty() && !stringAnswerId1.isEmpty()) &&
                 (!answer2.isEmpty() && !stringAnswerId2.isEmpty())) {
             verify = true;
             System.out.println(verify);
+
         } else if ((!answer2.isEmpty() && !stringAnswerId2.isEmpty()) &&
                 (!answer3.isEmpty() && !stringAnswerId3.isEmpty())) {
             verify = true;
             System.out.println(verify);
+
         } else if ((!answer3.isEmpty() && !stringAnswerId3.isEmpty()) &&
                 (!answer0.isEmpty() && !stringAnswerId0.isEmpty())) {
             verify = true;
             System.out.println(verify);
+
         } else if ((!answer0.isEmpty() && !stringAnswerId0.isEmpty()) &&
                 (!answer2.isEmpty() && !stringAnswerId2.isEmpty())) {
             verify = true;
             System.out.println(verify);
+
         } else if ((!answer3.isEmpty() && !stringAnswerId3.isEmpty()) &&
                 (!answer1.isEmpty() && !stringAnswerId1.isEmpty())) {
             verify = true;
             System.out.println(verify);
+
         } else {
             verify = false;
             System.out.println(verify);
@@ -451,25 +450,25 @@ public class QuestionEditController implements Initializable {
         boolean answersCreatet = false;
 
         //Check wenn AnswerId Feld nicht leer ist, dann lese aus und parse in Integer.
-        if (!answerId0.getText().isEmpty()) {
+        if (!answerId0.getText().trim().isEmpty()) {
             aId0 = Integer.parseInt(answerId0.getText());
         }
-        if (!answerId1.getText().isEmpty()) {
+        if (!answerId1.getText().trim().isEmpty()) {
             aId1 = Integer.parseInt(answerId1.getText());
         }
-        if (!answerId2.getText().isEmpty()) {
+        if (!answerId2.getText().trim().isEmpty()) {
             aId2 = Integer.parseInt(answerId2.getText());
         }
-        if (!answerId3.getText().isEmpty()) {
+        if (!answerId3.getText().trim().isEmpty()) {
             aId3 = Integer.parseInt(answerId3.getText());
         }
 
 
 
-        String answerObjText0 = answerText0.getText();
-        String answerObjText1 = answerText1.getText();
-        String answerObjText2 = answerText2.getText();
-        String answerObjText3 = answerText3.getText();
+        String answerObjText0 = answerText0.getText().trim();
+        String answerObjText1 = answerText1.getText().trim();
+        String answerObjText2 = answerText2.getText().trim();
+        String answerObjText3 = answerText3.getText().trim();
 
         boolean correctAnswer0 = answerCorrect0.isSelected();
         boolean correctAnswer1 = answerCorrect1.isSelected();
@@ -555,7 +554,7 @@ public class QuestionEditController implements Initializable {
         initWithData(tmpQ);*/
 
         DBConnection con = new DBConnection();
-        initWithData(con.getQuestionWithIdFromDB(29));
+        initWithData(con.getQuestionWithIdFromDB(32));
 
     }
 

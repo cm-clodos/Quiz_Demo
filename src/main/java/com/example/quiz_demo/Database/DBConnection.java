@@ -26,6 +26,7 @@ public class DBConnection {
          e.printStackTrace();
      }
  }*/
+    ////////////// Implementieren///////////////////
 public void addOneAnswerInDB(Answer answer){
 
     String query = "INSERT INTO answers (answer_text, answer_correct, question_id) VALUE ('" + answer.getAnswerText() + "',"
@@ -35,19 +36,12 @@ public void addOneAnswerInDB(Answer answer){
          Statement statement = con.createStatement();
          ResultSet rs = statement.executeQuery(query)) {
 
-        while (rs.next()) {
-        }
-
-
-
     } catch (SQLException ex) {
         System.out.println(ex.getMessage());
         System.out.println("Connection NOT OK");
         ex.printStackTrace();
 
-
     }
-
 
 }
 
@@ -81,6 +75,7 @@ public void addOneAnswerInDB(Answer answer){
 
     }
 
+    /////////////Implementieren//////////////
     public void updateAnswers(int questionId, String answerText, boolean isCorrect, int answerId){
     String query = "UPDATE answers SET answer_text='" + answerText + "', answer_correct=" + isCorrect + "" +
             " WHERE question_id=" + questionId + " AND answer_id=" + answerId;
@@ -89,9 +84,6 @@ public void addOneAnswerInDB(Answer answer){
              Statement statement = con.createStatement();
              ResultSet rs = statement.executeQuery(query)) {
 
-            while (rs.next()) {
-
-            }
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
             System.out.println("Connection NOT OK");
@@ -101,6 +93,7 @@ public void addOneAnswerInDB(Answer answer){
 
     }
 
+    /////////////Implementieren///////////////
     public void deleteAnswerInDb(int questionId, int answerId){
     String query = "DELETE FROM answers WHERE answer_id=" + answerId +
             " AND question_id=" + questionId;
@@ -118,8 +111,9 @@ public void addOneAnswerInDB(Answer answer){
 
         }
 
-
     }
+
+    /////////Implementieren//////////////
     public int insertNewQuestion(String questionText) {
         String query = "INSERT INTO questions (question_text) VALUE ('" + questionText + "') RETURNING question_id;";
         //String query2 = "SELECT LAST_INSERT_ID();";
@@ -144,6 +138,8 @@ public void addOneAnswerInDB(Answer answer){
         }
         return lastCreatetQuestionId;
     }
+
+    /////////////Implementieren////////////////////////
     public void UpdateQuestion(int questionId, String questionText) {
         String query = "UPDATE questions SET question_text='" + questionText + "' WHERE question_id=" + questionId;
 
@@ -151,9 +147,6 @@ public void addOneAnswerInDB(Answer answer){
              Statement statement = con.createStatement();
              ResultSet rs = statement.executeQuery(query)) {
 
-            while (rs.next()) {
-
-            }
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
             System.out.println("Connection NOT OK");
@@ -162,7 +155,8 @@ public void addOneAnswerInDB(Answer answer){
         }
     }
 
-    public void deleteQuestionbAndAnswersInDb(int questionId){
+    /////////////Implementieren//////////////////////
+    public void deleteQuestionAndAnswersInDb(int questionId){
     String query = "DELETE FROM questions WHERE question_id =" + questionId;
     String query2 = "DELETE FROM answers WHERE question_id=" + questionId;
 
